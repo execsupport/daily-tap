@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Daily Tap">
+<meta name="theme-color" content="#F7F5F2">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Chie Daily Tap — v1</title>
+<style>
+  :root{
+    --bg:#F7F5F2;
+    --paper:#FFFFFF;
+    --ink:#26292E;
+    --ink-soft:#5C6470;
+    --hairline:#E4DFD8;
+    --blue:#6E87A0;
+    --bluegray:#8B95A5;
+    --mauve:#A48B9C;
+    --blue-tint:#EDF1F5;
+    --mauve-tint:#F3EEF2;
+    --gray-tint:#F0EFEC;
+    --done:#5F7D96;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:15px;line-height:1.8;-webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;}
+  .stage{max-width:920px;margin:0 auto;padding:64px 32px 90px;}
+
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--bluegray);font-weight:600;}
+  h1{font-size:30px;font-weight:600;margin:14px 0 10px;line-height:1.5;}
+  .lede{color:var(--ink-soft);font-size:14.5px;max-width:560px;}
+
+  .demo-note{
+    display:inline-block;margin-top:18px;font-size:11px;letter-spacing:.12em;
+    background:var(--mauve-tint);color:var(--mauve);font-weight:600;
+    padding:4px 14px;border-radius:999px;cursor:pointer;
+  }
+  .demo-note.live{background:var(--blue-tint);color:var(--blue);}
+
+  /* ---------- phone ---------- */
+  .phone-wrap{display:flex;justify-content:center;margin:52px 0 60px;}
+  .phone{
+    width:394px;background:var(--paper);
+    border:1px solid var(--hairline);border-radius:46px;
+    box-shadow:0 24px 60px rgba(38,41,46,.10), 0 4px 14px rgba(38,41,46,.05);
+    padding:14px;
+  }
+  .screen{
+    background:var(--bg);border-radius:34px;overflow:hidden;
+    display:flex;flex-direction:column;min-height:740px;position:relative;
+  }
+  .statusbar{
+    display:flex;justify-content:space-between;padding:14px 26px 6px;
+    font-size:12px;color:var(--bluegray);letter-spacing:.06em;font-weight:600;
+  }
+  .app-head{padding:18px 24px 6px;}
+  .app-head .kicker{font-size:10px;letter-spacing:.26em;color:var(--bluegray);font-weight:700;}
+  .app-head h2{font-size:24px;font-weight:600;margin-top:6px;line-height:1.4;}
+  .app-head .sub{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .app-head .msg{font-size:12.5px;color:var(--ink-soft);}
+  .prog{
+    font-size:12px;font-weight:700;color:var(--blue);
+    background:var(--blue-tint);border-radius:999px;padding:3px 14px;letter-spacing:.06em;
+  }
+
+  .scroll{padding:14px 20px 96px;flex:1;}
+  .grp{font-size:10.5px;letter-spacing:.2em;color:var(--bluegray);font-weight:700;margin:18px 6px 10px;}
+
+  .act{
+    display:flex;align-items:center;gap:16px;
+    background:var(--paper);border:1px solid var(--hairline);border-radius:18px;
+    padding:16px 18px;margin-bottom:10px;cursor:pointer;user-select:-webkit-user-select;user-select:none;
+    transition:all .18s ease;
+  }
+  .act:active{transform:scale(.985);}
+  .act .info{flex:1;}
+  .act .name{font-size:15.5px;font-weight:600;line-height:1.5;}
+  .act .time{font-size:11.5px;color:var(--bluegray);letter-spacing:.06em;margin-top:1px;}
+  .ring{
+    width:34px;height:34px;border-radius:50%;
+    border:2px solid var(--hairline);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    color:transparent;font-size:16px;font-weight:700;
+    transition:all .18s ease;
+  }
+  .act.done{background:var(--blue-tint);border-color:var(--blue);}
+  .act.done .ring{background:var(--done);border-color:var(--done);color:#fff;}
+  .act.done .name{color:var(--done);}
+
+  /* counter row */
+  .counter .ctrl{display:flex;align-items:center;gap:14px;}
+  .cbtn{
+    width:34px;height:34px;border-radius:50%;border:1.5px solid var(--hairline);
+    background:var(--paper);font-size:18px;color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all .15s ease;line-height:1;
+  }
+  .cbtn:active{transform:scale(.92);}
+  .cnum{font-family:Georgia,serif;font-size:20px;min-width:22px;text-align:center;color:var(--ink);}
+  .counter.has{background:var(--blue-tint);border-color:var(--blue);}
+  .counter.has .cnum{color:var(--done);font-weight:600;}
+
+  /* voice section */
+  .vcard{
+    background:var(--paper);border:1px solid var(--hairline);border-radius:18px;
+    padding:16px 18px;margin-bottom:10px;
+  }
+  .vcard ul{list-style:none;margin:0 0 12px;}
+  .vcard li{
+    font-size:13px;color:var(--ink-soft);line-height:2;
+    padding-left:16px;position:relative;
+  }
+  .vcard li::before{
+    content:"";position:absolute;left:2px;top:14px;
+    width:5px;height:5px;border-radius:50%;background:var(--mauve);
+  }
+  .vrow{display:flex;align-items:center;gap:10px;margin-top:10px;}
+  .mic{
+    width:40px;height:40px;border-radius:50%;border:1.5px solid var(--hairline);
+    background:var(--paper);color:var(--ink-soft);font-size:17px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all .15s ease;flex-shrink:0;
+  }
+  .mic:active{transform:scale(.92);}
+  .mic.rec{background:var(--mauve-tint);border-color:var(--mauve);color:var(--mauve);animation:pulse 1.4s ease infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(164,139,156,.25);}50%{box-shadow:0 0 0 8px rgba(164,139,156,0);}}
+  .sendbtn{
+    margin-left:auto;border:none;cursor:pointer;
+    font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;
+    color:var(--blue);background:var(--blue-tint);border-radius:999px;padding:9px 22px;
+    transition:all .15s ease;
+  }
+  .sendbtn:active{transform:scale(.96);}
+  .vhint{font-size:10.5px;color:var(--bluegray);margin-top:8px;letter-spacing:.04em;}
+
+  textarea{
+    width:100%;border:1px solid var(--hairline);border-radius:18px;
+    background:var(--paper);padding:14px 18px;font-family:inherit;font-size:14px;
+    color:var(--ink);resize:none;height:96px;outline:none;line-height:1.7;
+  }
+  textarea::placeholder{color:var(--bluegray);}
+  textarea:focus{border-color:var(--blue);}
+  .vcard textarea{background:var(--bg);}
+
+  .sync{
+    position:absolute;bottom:0;left:0;right:0;
+    padding:14px 24px 22px;text-align:center;
+    background:linear-gradient(transparent, var(--bg) 40%);
+    font-size:11px;color:var(--bluegray);letter-spacing:.08em;cursor:pointer;
+  }
+  .toast{
+    position:absolute;bottom:64px;left:50%;transform:translateX(-50%) translateY(16px);
+    background:var(--ink);color:#F7F5F2;font-size:12.5px;letter-spacing:.06em;
+    padding:10px 22px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:all .25s ease;white-space:nowrap;
+  }
+  .toast.show{opacity:.94;transform:translateX(-50%) translateY(0);}
+
+  /* ---------- captions ---------- */
+  .cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .cap{
+    background:var(--paper);border:1px solid var(--hairline);border-radius:14px;
+    padding:20px 22px 18px;
+  }
+  .cap .n{font-family:Georgia,serif;font-size:13px;color:var(--mauve);letter-spacing:.1em;margin-bottom:8px;}
+  .cap .t{font-weight:600;font-size:14px;margin-bottom:6px;line-height:1.6;}
+  .cap .d{font-size:12.5px;color:var(--ink-soft);line-height:1.8;}
+
+  footer{
+    margin-top:64px;padding-top:22px;border-top:1px solid var(--hairline);
+    font-size:11.5px;color:var(--bluegray);letter-spacing:.08em;line-height:2;
+  }
+
+  @media(max-width:760px){
+    .stage{padding:40px 18px 64px;}
+    h1{font-size:24px;}
+    .cap-grid{grid-template-columns:1fr;}
+    .phone{width:100%;max-width:394px;}
+  }
+
+  /* ---------- phone-native mode (ホーム画面アプリ / スマホ) ---------- */
+  @media (display-mode: standalone), (max-width:520px){
+    .stage{max-width:none;padding:0;}
+    header,.cap-grid,footer{display:none;}
+    .phone-wrap{margin:0;}
+    .phone{width:100%;max-width:none;border:none;border-radius:0;box-shadow:none;padding:0;background:var(--bg);}
+    .screen{border-radius:0;min-height:100dvh;}
+    .statusbar{padding-top:calc(14px + env(safe-area-inset-top));}
+    .sync{padding-bottom:calc(22px + env(safe-area-inset-bottom));}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <header>
+    <div class="eyebrow">Chie Daily Tap — Genie Edition</div>
+    <h1 class="serif">毎日ひらいて、ぽちぽち。</h1>
+    <p class="lede">ホーム画面のアイコンから3秒。やったことをタップすると Notion の DB_Chie Daily Tap に1行ずつ落ちて、あとから Genie が集計・振り返りに使える。最後は音声で、その日の感じたことをひとこと。</p>
+    <span class="demo-note" id="connState" onclick="setWebhook()">NOTION — 接続待ち（ここをタップして Webhook URL を設定）</span>
+  </header>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen">
+        <div class="statusbar"><span id="clock">7:12</span><span>CHIE DAILY TAP</span></div>
+        <div class="app-head">
+          <div class="kicker">TODAY</div>
+          <h2 class="serif" id="dateHead">7月7日 火曜日</h2>
+          <div class="sub">
+            <span class="msg">おかえり、Chie。やったらタップ。</span>
+            <span class="prog" id="prog">0 / 5</span>
+          </div>
+        </div>
+        <div class="scroll">
+
+          <div class="grp">毎日の定常</div>
+          <div class="act" data-name="Genieの点呼" onclick="toggle(this)">
+            <div class="info"><div class="name">Genieの点呼</div><div class="time">朝 —「Morning, Genie. Let's Go」</div></div>
+            <div class="ring">✓</div>
+          </div>
+          <div class="act" data-name="種まき" onclick="toggle(this)">
+            <div class="info"><div class="name">種まき</div><div class="time">新しいものに、最初のひと鍬 — 点呼で Genie が指定</div></div>
+            <div class="ring">✓</div>
+          </div>
+          <div class="act" data-name="水やり" onclick="toggle(this)">
+            <div class="info"><div class="name">水やり</div><div class="time">育てているものに、今日の1回 — 点呼で Genie が指定</div></div>
+            <div class="ring">✓</div>
+          </div>
+          <div class="act" data-name="星と羅針盤" onclick="toggle(this)">
+            <div class="info"><div class="name">星と羅針盤</div><div class="time">Northstar — 方角を確かめる</div></div>
+            <div class="ring">✓</div>
+          </div>
+          <div class="act" data-name="夜のクロージング" onclick="toggle(this)">
+            <div class="info"><div class="name">夜のクロージング</div><div class="time">夜 — 1日をとじる</div></div>
+            <div class="ring">✓</div>
+          </div>
+
+          <div class="grp">今日あったら</div>
+          <div class="act counter" id="sprint">
+            <div class="info"><div class="name">集中スプリント</div><div class="time">回数をカウント</div></div>
+            <div class="ctrl">
+              <div class="cbtn" onclick="count(-1)">−</div>
+              <div class="cnum" id="pcount">0</div>
+              <div class="cbtn" onclick="count(1)">＋</div>
+            </div>
+          </div>
+
+          <div class="grp">きょうの声</div>
+          <div class="vcard">
+            <ul>
+              <li>感謝ノート</li>
+              <li>今日の気づき</li>
+              <li>自分のためにできたこと</li>
+            </ul>
+            <textarea id="voiceText" placeholder="音声入力でどうぞ。今日、感じたことをそのまま。"></textarea>
+            <div class="vrow">
+              <div class="mic" id="micBtn" onclick="mic()">●</div>
+              <button class="sendbtn" onclick="sendVoice()">NOTION に残す</button>
+            </div>
+            <div class="vhint" id="vhint">マイクをタップして話す。iPhone ならキーボードのマイクでもOK。</div>
+          </div>
+
+        </div>
+        <div class="sync" id="syncBar" onclick="setWebhook()">タップした瞬間に Notion に保存されます</div>
+        <div class="toast" id="toast">Notion に記録しました</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cap-grid">
+    <div class="cap">
+      <div class="n">01</div>
+      <div class="t">3秒で完了する動線</div>
+      <div class="d">ホーム画面アイコン → 今日の定常が最初から並んでいる → タップ。入力も選択も日付指定もない。点呼のついでに押せる速さ。</div>
+    </div>
+    <div class="cap">
+      <div class="n">02</div>
+      <div class="t">タップ = 即 Notion 保存</div>
+      <div class="d">保存ボタンなし。タップの瞬間に Make webhook 経由で DB_Chie Daily Tap に1行書き込まれる（YOSE Form で実績のある経路）。オフラインや接続前の分はアプリ内に待機して、つながった時にまとめて送信。</div>
+    </div>
+    <div class="cap">
+      <div class="n">03</div>
+      <div class="t">最後は、声でとじる</div>
+      <div class="d">感謝ノート・今日の気づき・自分のためにできたこと。3つの問いをリマインドに、音声でひとこと残して1日をとじる。本文ごと Notion に落ちる。</div>
+    </div>
+  </div>
+
+  <footer>
+    CHIE DAILY TAP — v1 ／ 2026.07.07 ／ Prepared by Genie<br>
+    保存先: Notion DB_Chie Daily Tap（🧠 Claude 学習記録 配下）／ 経路: Make webhook ＋ ローカル待機キュー。項目の入替はいつでも Genie に一声
+  </footer>
+
+</div>
+
+<script>
+  /* ---------- config & state ---------- */
+  const WEBHOOK_KEY = 'cdt_webhook';
+  const QUEUE_KEY   = 'cdt_queue';
+
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  const STATE_KEY = 'cdt_state_' + todayISO();
+
+  function loadJSON(k, fb){ try{ return JSON.parse(localStorage.getItem(k)) ?? fb; }catch(e){ return fb; } }
+  function saveJSON(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+  let state = loadJSON(STATE_KEY, {items:{}, sprint:0});
+
+  /* ---------- header ---------- */
+  (function initHead(){
+    const d = new Date();
+    const yobi = ['日','月','火','水','木','金','土'][d.getDay()];
+    document.getElementById('dateHead').textContent = (d.getMonth()+1) + '月' + d.getDate() + '日 ' + yobi + '曜日';
+    document.getElementById('clock').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+  })();
+
+  /* ---------- progress & toast ---------- */
+  const acts = Array.from(document.querySelectorAll('.act[data-name]'));
+  function refresh(){
+    const done = acts.filter(a => a.classList.contains('done')).length;
+    document.getElementById('prog').textContent = done + ' / ' + acts.length;
+  }
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._h);
+    t._h = setTimeout(()=>t.classList.remove('show'), 1600);
+  }
+
+  /* ---------- sync layer ---------- */
+  function webhook(){ return localStorage.getItem(WEBHOOK_KEY) || ''; }
+
+  function connUI(){
+    const el = document.getElementById('connState');
+    const q = loadJSON(QUEUE_KEY, []).length;
+    if(webhook()){
+      el.textContent = 'NOTION — 接続済み' + (q ? '（送信待ち ' + q + '件）' : '');
+      el.classList.add('live');
+    }else{
+      el.textContent = 'NOTION — 接続待ち（ここをタップして Webhook URL を設定）' + (q ? '｜ローカル待機 ' + q + '件' : '');
+      el.classList.remove('live');
+    }
+    document.getElementById('syncBar').textContent =
+      webhook() ? 'タップした瞬間に Notion に保存されます'
+                : 'いまはローカル待機中 — Webhook 設定後にまとめて Notion へ';
+  }
+
+  function setWebhook(){
+    const cur = webhook();
+    const url = prompt('Make Webhook URL を貼り付けてください', cur);
+    if(url === null) return;
+    localStorage.setItem(WEBHOOK_KEY, url.trim());
+    connUI();
+    if(url.trim()) flushQueue();
+  }
+
+  async function post(rec){
+    const url = webhook();
+    if(!url) throw new Error('no-webhook');
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(rec)
+    });
+    if(!res.ok) throw new Error('http-' + res.status);
+  }
+
+  function enqueue(rec){
+    const q = loadJSON(QUEUE_KEY, []);
+    q.push(rec);
+    saveJSON(QUEUE_KEY, q);
+  }
+
+  async function flushQueue(){
+    if(!webhook()) return;
+    let q = loadJSON(QUEUE_KEY, []);
+    if(!q.length) return;
+    const rest = [];
+    for(const rec of q){
+      try{ await post(rec); }
+      catch(e){ rest.push(rec); }
+    }
+    saveJSON(QUEUE_KEY, rest);
+    connUI();
+    if(q.length && !rest.length) toast('待機分 ' + q.length + '件を Notion に送信しました');
+  }
+
+  async function record(item, type, action, count, text){
+    const rec = { item, type, action, count: count ?? null, text: text ?? '', date: todayISO(), ts: new Date().toISOString() };
+    if(!webhook()){
+      enqueue(rec); connUI();
+      toast('記録しました（Notion 接続待ち）');
+      return;
+    }
+    try{
+      await post(rec);
+      toast(action === '取消' ? '取消を Notion に記録しました' : 'Notion に記録しました');
+    }catch(e){
+      enqueue(rec); connUI();
+      toast('オフライン保存 — あとで送信します');
+    }
+  }
+
+  /* ---------- interactions ---------- */
+  function toggle(el){
+    el.classList.toggle('done');
+    const on = el.classList.contains('done');
+    state.items[el.dataset.name] = on;
+    saveJSON(STATE_KEY, state);
+    refresh();
+    record(el.dataset.name, '定常', on ? '記録' : '取消');
+  }
+
+  let countTimer = null;
+  function count(d){
+    const n = document.getElementById('pcount');
+    const v = Math.max(0, state.sprint + d);
+    if(v === state.sprint) return;
+    state.sprint = v;
+    saveJSON(STATE_KEY, state);
+    n.textContent = v;
+    document.getElementById('sprint').classList.toggle('has', v > 0);
+    clearTimeout(countTimer);
+    countTimer = setTimeout(()=> record('集中スプリント', 'カウント', '記録', state.sprint), 900);
+  }
+
+  /* ---------- voice ---------- */
+  let recog = null, recording = false;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    document.getElementById('vhint').textContent = 'この端末はテキストエリアをタップ → キーボードのマイクで音声入力してください。';
+    document.getElementById('micBtn').style.opacity = .35;
+  }
+  function mic(){
+    if(!SR) return;
+    if(recording){ recog.stop(); return; }
+    recog = new SR();
+    recog.lang = 'ja-JP';
+    recog.continuous = true;
+    recog.interimResults = false;
+    const ta = document.getElementById('voiceText');
+    recog.onresult = e => {
+      for(let i = e.resultIndex; i < e.results.length; i++){
+        if(e.results[i].isFinal){
+          ta.value += (ta.value ? '\n' : '') + e.results[i][0].transcript.trim();
+        }
+      }
+    };
+    recog.onend = () => {
+      recording = false;
+      document.getElementById('micBtn').classList.remove('rec');
+    };
+    recog.onerror = recog.onend;
+    recog.start();
+    recording = true;
+    document.getElementById('micBtn').classList.add('rec');
+  }
+  function sendVoice(){
+    const ta = document.getElementById('voiceText');
+    const text = ta.value.trim();
+    if(!text){ toast('まだ何も入っていません'); return; }
+    record('きょうの声', 'ボイスログ', '記録', null, text);
+    ta.value = '';
+  }
+
+  /* ---------- restore ---------- */
+  (function restore(){
+    acts.forEach(a => { if(state.items[a.dataset.name]) a.classList.add('done'); });
+    document.getElementById('pcount').textContent = state.sprint;
+    document.getElementById('sprint').classList.toggle('has', state.sprint > 0);
+    refresh();
+    connUI();
+    flushQueue();
+    window.addEventListener('online', flushQueue);
+  })();
+</script>
+</body>
+</html>
