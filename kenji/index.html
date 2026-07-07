@@ -141,6 +141,8 @@
     {name:"SOHOハウス", time:"週による — あった日だけタップ"},
     {name:"YouTube 投稿", time:"出した日にタップ（投稿リズム確認中）"},
   ];
+  // 定常クラス一覧 — 予定日以外の日は「今日あったら」に出す（曜日ずれ対応）
+  const REGULARS = ["Power Monday", "サロン朝ヨガ", "IGNITE 配信"];
 
   const now = new Date();
   const iso = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
@@ -183,6 +185,10 @@
 
   const extraBox = document.getElementById("extra");
   EXTRA.forEach(it => extraBox.appendChild(card(it, false)));
+  // きょう予定に入っていない定常クラス → ずらした日にここでタップ
+  const schedNames = sched.map(it => it.name);
+  REGULARS.filter(n => !schedNames.includes(n)).forEach(n =>
+    extraBox.appendChild(card({name:n, time:"予定をずらした日はここでタップ"}, false)));
 
   // パーソナル counter
   const pc = document.createElement("div");
