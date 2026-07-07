@@ -14,6 +14,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return; // webhookへのPOSTは素通し
+  if (e.request.url.includes('assignments.json')) return; // 当日指定は常にネット直読み（キャッシュしない）
   e.respondWith(
     fetch(e.request).then(res => {
       const copy = res.clone();

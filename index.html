@@ -123,15 +123,6 @@
     width:5px;height:5px;border-radius:50%;background:var(--mauve);
   }
   .vrow{display:flex;align-items:center;gap:10px;margin-top:10px;}
-  .mic{
-    width:40px;height:40px;border-radius:50%;border:1.5px solid var(--hairline);
-    background:var(--paper);color:var(--ink-soft);font-size:17px;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;
-    transition:all .15s ease;flex-shrink:0;
-  }
-  .mic:active{transform:scale(.92);}
-  .mic.rec{background:var(--mauve-tint);border-color:var(--mauve);color:var(--mauve);animation:pulse 1.4s ease infinite;}
-  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(164,139,156,.25);}50%{box-shadow:0 0 0 8px rgba(164,139,156,0);}}
   .sendbtn{
     margin-left:auto;border:none;cursor:pointer;
     font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;
@@ -228,11 +219,11 @@
             <div class="ring">✓</div>
           </div>
           <div class="act" data-name="種まき" onclick="toggle(this)">
-            <div class="info"><div class="name">種まき</div><div class="time">新しいものに、最初のひと鍬 — 点呼で Genie が指定</div></div>
+            <div class="info"><div class="name">種まき</div><div class="time" id="tanemakiTime">新しいものに、最初のひと鍬 — 点呼で Genie が指定</div></div>
             <div class="ring">✓</div>
           </div>
           <div class="act" data-name="水やり" onclick="toggle(this)">
-            <div class="info"><div class="name">水やり</div><div class="time">育てているものに、今日の1回 — 点呼で Genie が指定</div></div>
+            <div class="info"><div class="name">水やり</div><div class="time" id="mizuyariTime">育てているものに、今日の1回 — 点呼で Genie が指定</div></div>
             <div class="ring">✓</div>
           </div>
           <div class="act" data-name="星と羅針盤" onclick="toggle(this)">
@@ -263,10 +254,9 @@
             </ul>
             <textarea id="voiceText" placeholder="音声入力でどうぞ。今日、感じたことをそのまま。"></textarea>
             <div class="vrow">
-              <div class="mic" id="micBtn" onclick="mic()">●</div>
               <button class="sendbtn" onclick="sendVoice()">NOTION に残す</button>
             </div>
-            <div class="vhint" id="vhint">マイクをタップして話す。iPhone ならキーボードのマイクでもOK。</div>
+            <div class="vhint">テキスト欄をタップ → キーボードのマイクで音声入力してね。</div>
           </div>
 
         </div>
@@ -437,36 +427,6 @@
   }
 
   /* ---------- voice ---------- */
-  let recog = null, recording = false;
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    document.getElementById('vhint').textContent = 'この端末はテキストエリアをタップ → キーボードのマイクで音声入力してください。';
-    document.getElementById('micBtn').style.opacity = .35;
-  }
-  function mic(){
-    if(!SR) return;
-    if(recording){ recog.stop(); return; }
-    recog = new SR();
-    recog.lang = 'ja-JP';
-    recog.continuous = true;
-    recog.interimResults = false;
-    const ta = document.getElementById('voiceText');
-    recog.onresult = e => {
-      for(let i = e.resultIndex; i < e.results.length; i++){
-        if(e.results[i].isFinal){
-          ta.value += (ta.value ? '\n' : '') + e.results[i][0].transcript.trim();
-        }
-      }
-    };
-    recog.onend = () => {
-      recording = false;
-      document.getElementById('micBtn').classList.remove('rec');
-    };
-    recog.onerror = recog.onend;
-    recog.start();
-    recording = true;
-    document.getElementById('micBtn').classList.add('rec');
-  }
   function sendVoice(){
     const ta = document.getElementById('voiceText');
     const text = ta.value.trim();
@@ -474,6 +434,18 @@
     record('きょうの声', 'ボイスログ', '記録', null, text);
     ta.value = '';
   }
+
+  /* ---------- 点呼からの当日指定（種まき・水やり） ---------- */
+  (async function loadAssignments(){
+    try{
+      const res = await fetch('assignments.json?ts=' + Date.now(), {cache:'no-store'});
+      if(!res.ok) return;
+      const a = await res.json();
+      if(a.date !== todayISO()) return;
+      if(a.tanemaki) document.getElementById('tanemakiTime').textContent = a.tanemaki;
+      if(a.mizuyari) document.getElementById('mizuyariTime').textContent = a.mizuyari;
+    }catch(e){ /* オフライン・未設定時はデフォルト文言のまま */ }
+  })();
 
   /* ---------- offline (app mode) ---------- */
   if('serviceWorker' in navigator && window.isSecureContext){
