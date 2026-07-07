@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F7F5F2">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Kenji Daily Tap</title>
+<style>
+  :root{
+    --bg:#F7F5F2; --paper:#FFFFFF; --ink:#26292E; --ink-soft:#5C6470;
+    --hairline:#E4DFD8; --blue:#6E87A0; --bluegray:#8B95A5; --mauve:#A48B9C;
+    --blue-tint:#EDF1F5; --mauve-tint:#F3EEF2; --gray-tint:#F0EFEC; --done:#5F7D96;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--bg);}
+  body{
+    color:var(--ink);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:15px;line-height:1.8;-webkit-font-smoothing:antialiased;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .serif{font-family:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;}
+  .app{
+    max-width:480px;margin:0 auto;min-height:100dvh;
+    padding:calc(env(safe-area-inset-top) + 18px) 20px calc(env(safe-area-inset-bottom) + 90px);
+    position:relative;
+  }
+  .app-head .kicker{font-size:10px;letter-spacing:.26em;color:var(--bluegray);font-weight:700;}
+  .app-head h1{font-size:26px;font-weight:600;margin-top:6px;line-height:1.4;}
+  .app-head .sub{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:10px;}
+  .app-head .msg{font-size:12.5px;color:var(--ink-soft);}
+  .prog{
+    font-size:12px;font-weight:700;color:var(--blue);
+    background:var(--blue-tint);border-radius:999px;padding:3px 14px;letter-spacing:.06em;white-space:nowrap;
+  }
+  .demo{
+    display:inline-block;margin-top:10px;font-size:10px;letter-spacing:.12em;
+    background:var(--mauve-tint);color:var(--mauve);font-weight:700;
+    padding:3px 12px;border-radius:999px;
+  }
+  .grp{font-size:10.5px;letter-spacing:.2em;color:var(--bluegray);font-weight:700;margin:22px 6px 10px;}
+  .act{
+    display:flex;align-items:center;gap:16px;
+    background:var(--paper);border:1px solid var(--hairline);border-radius:18px;
+    padding:16px 18px;margin-bottom:10px;cursor:pointer;user-select:none;-webkit-user-select:none;
+    transition:all .18s ease;
+  }
+  .act:active{transform:scale(.985);}
+  .act .info{flex:1;}
+  .act .name{font-size:15.5px;font-weight:600;line-height:1.5;}
+  .act .time{font-size:11.5px;color:var(--bluegray);letter-spacing:.06em;margin-top:1px;}
+  .ring{
+    width:34px;height:34px;border-radius:50%;
+    border:2px solid var(--hairline);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    color:transparent;font-size:16px;font-weight:700;transition:all .18s ease;
+  }
+  .act.done{background:var(--blue-tint);border-color:var(--blue);}
+  .act.done .ring{background:var(--done);border-color:var(--done);color:#fff;}
+  .act.done .name{color:var(--done);}
+  .none-row{
+    background:var(--gray-tint);border:1px dashed var(--hairline);border-radius:18px;
+    padding:14px 18px;margin-bottom:10px;font-size:13px;color:var(--ink-soft);
+  }
+  .counter .ctrl{display:flex;align-items:center;gap:14px;}
+  .cbtn{
+    width:34px;height:34px;border-radius:50%;border:1.5px solid var(--hairline);
+    background:var(--paper);font-size:18px;color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all .15s ease;line-height:1;
+  }
+  .cbtn:active{transform:scale(.92);}
+  .cnum{font-family:Georgia,serif;font-size:20px;min-width:22px;text-align:center;color:var(--ink);}
+  .counter.has{background:var(--blue-tint);border-color:var(--blue);}
+  .counter.has .cnum{color:var(--done);font-weight:600;}
+  textarea{
+    width:100%;border:1px dashed var(--hairline);border-radius:18px;
+    background:var(--gray-tint);padding:14px 18px;font-family:inherit;font-size:14px;
+    color:var(--ink);resize:none;height:82px;outline:none;line-height:1.7;
+  }
+  textarea::placeholder{color:var(--bluegray);}
+  textarea:focus{border-color:var(--blue);border-style:solid;background:var(--paper);}
+  .sync{
+    position:fixed;bottom:0;left:0;right:0;
+    padding:12px 24px calc(env(safe-area-inset-bottom) + 14px);text-align:center;
+    background:linear-gradient(transparent, var(--bg) 45%);
+    font-size:10.5px;color:var(--bluegray);letter-spacing:.08em;pointer-events:none;
+  }
+  .toast{
+    position:fixed;bottom:calc(env(safe-area-inset-bottom) + 58px);left:50%;
+    transform:translateX(-50%) translateY(16px);
+    background:var(--ink);color:#F7F5F2;font-size:12.5px;letter-spacing:.06em;
+    padding:10px 22px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:all .25s ease;white-space:nowrap;z-index:10;
+  }
+  .toast.show{opacity:.94;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="app-head">
+    <div class="kicker">TODAY</div>
+    <h1 class="serif" id="today"></h1>
+    <div class="sub">
+      <span class="msg">今日もいい一日を。やったらタップ。</span>
+      <span class="prog" id="prog"></span>
+    </div>
+    <span class="demo">DEMO — 保存はこの端末内のみ（Notion 接続は次ステップ）</span>
+  </div>
+
+  <div class="grp">今日の予定</div>
+  <div id="sched"></div>
+
+  <div class="grp">今日あったら</div>
+  <div id="extra"></div>
+
+  <div class="grp">メモ</div>
+  <textarea id="memo" placeholder="休講・代講・ひとことあれば（なければ空欄でOK）"></textarea>
+</div>
+
+<div class="sync">デモ版 — Make 接続後はタップした瞬間に Notion に保存されます</div>
+<div class="toast" id="toast">記録しました</div>
+
+<script>
+  const WD = ["日","月","火","水","木","金","土"];
+  // 曜日別の定常スケジュール（getDay: 0=日）
+  const SCHEDULE = {
+    1: [{name:"Power Monday", time:"月曜定常"}],
+    2: [{name:"IGNITE 配信", time:"火曜定常"}],
+    3: [{name:"サロン朝ヨガ", time:"水曜定常"}],
+    4: [],
+    5: [{name:"サロン朝ヨガ", time:"金曜定常"}],
+    6: [], 0: [],
+  };
+  const EXTRA = [
+    {name:"IGNITE クラス", time:"代行など — あった日だけタップ"},
+    {name:"SOHOハウス", time:"週による — あった日だけタップ"},
+    {name:"YouTube 投稿", time:"出した日にタップ（投稿リズム確認中）"},
+  ];
+
+  const now = new Date();
+  const iso = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
+  const day = now.getDay();
+  const KEY = "kenji-tap-" + iso;
+  document.getElementById("today").textContent = (now.getMonth()+1) + "月" + now.getDate() + "日 " + WD[day] + "曜日";
+
+  const state = JSON.parse(localStorage.getItem(KEY) || '{"done":[],"personal":0,"memo":""}');
+  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+  const sched = SCHEDULE[day] || [];
+  const total = sched.length;
+
+  function card(item, isSched){
+    const el = document.createElement("div");
+    el.className = "act" + (state.done.includes(item.name) ? " done" : "");
+    el.innerHTML = '<div class="info"><div class="name"></div><div class="time"></div></div><div class="ring">✓</div>';
+    el.querySelector(".name").textContent = item.name;
+    el.querySelector(".time").textContent = item.time;
+    el.onclick = () => {
+      el.classList.toggle("done");
+      const on = el.classList.contains("done");
+      state.done = on ? [...state.done, item.name] : state.done.filter(n => n !== item.name);
+      save(); refresh(); toast(on ? "記録しました" : "取り消しました");
+    };
+    return el;
+  }
+
+  const schedBox = document.getElementById("sched");
+  if (sched.length === 0) {
+    const n = document.createElement("div");
+    n.className = "none-row";
+    n.textContent = (day === 0 || day === 6)
+      ? "きょうは WS 中心の日 — 開催実績は YOSE_カレンダーが記録します"
+      : "きょうの定常クラスはありません";
+    schedBox.appendChild(n);
+  } else {
+    sched.forEach(it => schedBox.appendChild(card(it, true)));
+  }
+
+  const extraBox = document.getElementById("extra");
+  EXTRA.forEach(it => extraBox.appendChild(card(it, false)));
+
+  // パーソナル counter
+  const pc = document.createElement("div");
+  pc.className = "act counter" + (state.personal > 0 ? " has" : "");
+  pc.innerHTML = '<div class="info"><div class="name">パーソナル</div><div class="time">件数をカウント</div></div>' +
+    '<div class="ctrl"><div class="cbtn" id="minus">−</div><div class="cnum" id="pcount"></div><div class="cbtn" id="plus">＋</div></div>';
+  extraBox.appendChild(pc);
+  const pn = document.getElementById("pcount");
+  pn.textContent = state.personal;
+  function bump(d){
+    const v = Math.max(0, state.personal + d);
+    if (v === state.personal) return;
+    state.personal = v; pn.textContent = v;
+    pc.classList.toggle("has", v > 0);
+    save(); toast("記録しました");
+  }
+  document.getElementById("minus").onclick = () => bump(-1);
+  document.getElementById("plus").onclick = () => bump(1);
+
+  // メモ
+  const memo = document.getElementById("memo");
+  memo.value = state.memo;
+  memo.addEventListener("input", () => { state.memo = memo.value; save(); });
+
+  function refresh(){
+    const done = sched.filter(it => state.done.includes(it.name)).length;
+    document.getElementById("prog").textContent = total > 0 ? done + " / " + total : "—";
+  }
+  let toastTimer;
+  function toast(msg){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 1400);
+  }
+  refresh();
+</script>
+</body>
+</html>
