@@ -475,6 +475,11 @@
     ta.value = '';
   }
 
+  /* ---------- offline (app mode) ---------- */
+  if('serviceWorker' in navigator && window.isSecureContext){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+
   /* ---------- restore ---------- */
   (function restore(){
     acts.forEach(a => { if(state.items[a.dataset.name]) a.classList.add('done'); });
