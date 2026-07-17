@@ -62,8 +62,16 @@
   }
   .reset:hover { color: var(--blue-deep); border-color: var(--blue); }
 
-  section { margin-top: 30px; }
-  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  details.sec { margin-top: 26px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; cursor: pointer; list-style: none; }
+  .sec-head::-webkit-details-marker { display: none; }
+  .sec-count {
+    margin-left: auto; font-size: 11px; font-weight: 600;
+    color: var(--blue-deep); background: var(--blue-pale);
+    border-radius: 999px; padding: 2px 12px;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  details.sec:not([open]) .sec-head { margin-bottom: 0; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
   .sec-num {
     font-size: 12px; font-weight: 700; color: var(--gold);
     letter-spacing: 1px;
@@ -125,6 +133,23 @@
     padding-top: 16px;
   }
   footer b { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    body { padding: 26px 12px 56px; }
+    h1 { font-size: 20px; }
+    .lede { font-size: 12px; }
+    .kicker { font-size: 10px; letter-spacing: 2px; }
+    .progress-shell { padding: 10px 14px; }
+    h2 { font-size: 14.5px; }
+    .sec-num { font-size: 11px; }
+    .sec-why { font-size: 11.5px; }
+    label.item { padding: 12px 13px; gap: 11px; }
+    input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 18px; margin-top: 2px; }
+    input[type="checkbox"]:checked::after { left: 4px; top: 0; width: 4px; height: 9px; }
+    .item-title { font-size: 13px; }
+    .item-why { font-size: 11.5px; line-height: 1.65; }
+    .tag { font-size: 9.5px; padding: 2px 8px; margin-top: 5px; }
+  }
 </style>
 </head>
 <body>
@@ -142,8 +167,8 @@
     </div>
   </header>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">01</span><h2>今日の運転席 — 毎日回すコア</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">01</span><h2>今日の運転席 — 毎日回すコア</h2><span class="sec-count"></span></summary>
     <p class="sec-why">フリーズの発生源は「優先順位の計算」そのもの。選択肢を1つにすれば選ぶコストはゼロになる。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="c1"><div class="item-body">
@@ -172,10 +197,10 @@
         <span class="tag gold">Weekly Talk / 棚卸しPJ</span>
       </div></label>
     </div>
-  </section>
+  </details>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">02</span><h2>着手ハック — 動けない瞬間の非常ボタン</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">02</span><h2>着手ハック — 動けない瞬間の非常ボタン</h2><span class="sec-count"></span></summary>
     <p class="sec-why">動けないのはサボりではなく実行機能が未起動なだけ。報酬系は「着手」しないと点火しない。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="s1"><div class="item-body">
@@ -201,10 +226,10 @@
         <span class="tag gold">Genieとの並走も同じ構造</span>
       </div></label>
     </div>
-  </section>
+  </details>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">03</span><h2>環境・物理 — 意志の出番を消す</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">03</span><h2>環境・物理 — 意志の出番を消す</h2><span class="sec-count"></span></summary>
     <p class="sec-why">視界に入るもの全部が脳への入力になる。部屋にある物の数 = 脳の負荷。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="e1"><div class="item-body">
@@ -229,10 +254,10 @@
         <span class="tag gold">Notion / Genieに全振り済</span>
       </div></label>
     </div>
-  </section>
+  </details>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">04</span><h2>夜と朝 — リズムが崩れると全部崩れる</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">04</span><h2>夜と朝 — リズムが崩れると全部崩れる</h2><span class="sec-count"></span></summary>
     <p class="sec-why">ADHDのメラトニン分泌は約2時間後ろズレ。夜の意志力ではなく朝の光でリセットする。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="n1"><div class="item-body">
@@ -256,10 +281,10 @@
         <div class="item-why">1日「普通」を演じるマスキングはフルマラソン級の重労働。帰宅後30分は何も予定しない。</div>
       </div></label>
     </div>
-  </section>
+  </details>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">05</span><h2>お金 — 衝動の熱は時間で冷ます</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">05</span><h2>お金 — 衝動の熱は時間で冷ます</h2><span class="sec-count"></span></summary>
     <p class="sec-why">「気前の良さ」も「課金癖」も報酬予測のバグ。意志ではなく振込設定と時間差で守る。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="m1"><div class="item-body">
@@ -279,10 +304,10 @@
         <div class="item-why">「これは自分の3時間分」と翻訳すると報酬予測が現実に近づく。</div>
       </div></label>
     </div>
-  </section>
+  </details>
 
-  <section>
-    <div class="sec-head"><span class="sec-num">06</span><h2>人間関係 — 地雷の位置だけ覚えておく</h2></div>
+  <details class="sec">
+    <summary class="sec-head"><span class="sec-num">06</span><h2>人間関係 — 地雷の位置だけ覚えておく</h2><span class="sec-count"></span></summary>
     <p class="sec-why">初対面の輝きは本物。問題は継続戦。仕組みで「裏切り」を「予告通りの調整」に変える。</p>
     <div class="card">
       <label class="item"><input type="checkbox" data-k="r1"><div class="item-body">
@@ -303,7 +328,7 @@
         <div class="item-why">相手は何とも思っていないことがほとんど。名前をつけるだけでメタ認知が働いて止まりやすい。</div>
       </div></label>
     </div>
-  </section>
+  </details>
 
   <footer>
     出典: Threads <b>@adhd_logic999（シュタイン | ADHD覚醒コーチング）</b> 2026年4月〜7月の全投稿より抽出・再構成。<br>
@@ -327,12 +352,20 @@
     localStorage.setItem(KEY, JSON.stringify(state));
     document.getElementById('fill').style.width = (done / total * 100) + '%';
     document.getElementById('count').textContent = done + ' / ' + total;
+    document.querySelectorAll('details.sec').forEach(sec => {
+      const bs = sec.querySelectorAll('input[type="checkbox"]');
+      const d = [...bs].filter(x => x.checked).length;
+      const c = sec.querySelector('.sec-count');
+      if (c) c.textContent = d + ' / ' + bs.length;
+    });
   }
   boxes.forEach(b => b.addEventListener('change', update));
   document.getElementById('reset').addEventListener('click', () => {
     boxes.forEach(b => b.checked = false);
     update();
   });
+  const compact = window.matchMedia('(max-width: 560px)').matches;
+  document.querySelectorAll('details.sec').forEach(sec => { sec.open = !compact; });
   update();
 </script>
 </body>
