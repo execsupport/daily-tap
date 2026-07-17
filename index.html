@@ -95,6 +95,14 @@
   .act.done .ring{background:var(--done);border-color:var(--done);color:#fff;}
   .act.done .name{color:var(--done);}
 
+  a.act{text-decoration:none;color:inherit;}
+  .go{
+    width:34px;height:34px;border-radius:50%;
+    border:2px solid var(--hairline);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--bluegray);font-size:15px;font-weight:600;
+  }
+
   /* counter row */
   .counter .ctrl{display:flex;align-items:center;gap:14px;}
   .cbtn{
@@ -258,6 +266,16 @@
             </div>
             <div class="vhint">テキスト欄をタップ → キーボードのマイクで音声入力してね。</div>
           </div>
+
+          <div class="grp">ライブラリ</div>
+          <a class="act" href="hacks/">
+            <div class="info"><div class="name">ADHDハックリスト</div><div class="time">脳は変えない、設計を変える — 28項目</div></div>
+            <div class="go">&rarr;</div>
+          </a>
+          <a class="act" href="threads/">
+            <div class="info"><div class="name">Threadsライブラリ</div><div class="time">シュタイン全投稿 — じぶん用Save</div></div>
+            <div class="go">&rarr;</div>
+          </a>
 
         </div>
         <div class="sync" id="syncBar" onclick="setWebhook()">タップした瞬間に Notion に保存されます</div>

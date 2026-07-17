@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F5F2">
+<title>ADHD Hack List | Chie Edition</title>
+<style>
+  :root {
+    --ivory: #F7F5F2;
+    --card: #FFFFFF;
+    --ink: #26292E;
+    --sub: #5C6470;
+    --blue: #6E87A0;
+    --blue-deep: #5A7492;
+    --blue-pale: #EDF1F6;
+    --gold: #C9A961;
+    --gold-pale: #F5EEDD;
+    --line: #E7E2D6;
+    --done: #9DB89D;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 48px 20px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header { margin-bottom: 36px; }
+  .kicker {
+    display: inline-block;
+    font-size: 11px; letter-spacing: 2.5px; font-weight: 600;
+    color: var(--blue-deep);
+    background: var(--blue-pale);
+    padding: 5px 14px; border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: 0.5px; }
+  h1 span { color: var(--gold); }
+  .lede { font-size: 13.5px; color: var(--sub); margin-top: 10px; max-width: 620px; }
+  .lede b { color: var(--ink); }
+
+  .progress-shell {
+    margin-top: 22px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .bar { flex: 1; height: 8px; background: var(--blue-pale); border-radius: 999px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--gold)); border-radius: 999px; transition: width .35s ease; }
+  .count { font-size: 12.5px; color: var(--sub); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .reset {
+    font-size: 11.5px; color: var(--sub);
+    background: none; border: 1px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; cursor: pointer; font-family: inherit;
+  }
+  .reset:hover { color: var(--blue-deep); border-color: var(--blue); }
+
+  section { margin-top: 30px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .sec-num {
+    font-size: 12px; font-weight: 700; color: var(--gold);
+    letter-spacing: 1px;
+  }
+  h2 { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; }
+  .sec-why { font-size: 12.5px; color: var(--sub); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--gold); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  label.item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  label.item:last-child { border-bottom: none; }
+  label.item:hover { background: var(--blue-pale); }
+  input[type="checkbox"] {
+    appearance: none;
+    width: 20px; height: 20px; flex: 0 0 20px;
+    margin-top: 3px;
+    border: 2px solid var(--blue);
+    border-radius: 7px;
+    cursor: pointer;
+    position: relative;
+    background: var(--card);
+    transition: all .15s;
+  }
+  input[type="checkbox"]:checked { background: var(--done); border-color: var(--done); }
+  input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute; left: 5px; top: 1px;
+    width: 5px; height: 10px;
+    border: solid #fff; border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .item-body { flex: 1; }
+  .item-title { font-size: 14.5px; font-weight: 600; }
+  .item-why { font-size: 12.5px; color: var(--sub); margin-top: 2px; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--blue-deep); background: var(--blue-pale);
+    border-radius: 999px; padding: 2px 10px;
+    margin-top: 7px; margin-right: 5px;
+  }
+  .tag.gold { color: #8A6D2B; background: var(--gold-pale); }
+  input:checked ~ .item-body .item-title { color: var(--sub); text-decoration: line-through; text-decoration-color: var(--done); text-decoration-thickness: 2px; }
+
+  footer {
+    margin-top: 44px;
+    font-size: 11.5px; color: var(--sub);
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  footer b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a href="../" style="display:inline-block;font-size:12px;color:var(--sub);text-decoration:none;margin-bottom:16px;letter-spacing:1px;">&larr; Daily Tap</a><br>
+    <div class="kicker">ADHD HACK LIST / CHIE EDITION</div>
+    <h1>脳は変えない、<span>設計</span>を変える。</h1>
+    <p class="lede">Threads @adhd_logic999（シュタイン）全投稿約120本から、<b>Chieの運用に実際つながるものだけ</b>を抽出した実働チェックリスト。根性論ゼロ、全部「仕組み」。チェックはこのブラウザに自動保存される。</p>
+    <div class="progress-shell">
+      <div class="bar"><i id="fill"></i></div>
+      <div class="count" id="count">0 / 0</div>
+      <button class="reset" id="reset">リセット</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>今日の運転席 — 毎日回すコア</h2></div>
+    <p class="sec-why">フリーズの発生源は「優先順位の計算」そのもの。選択肢を1つにすれば選ぶコストはゼロになる。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="c1"><div class="item-body">
+        <div class="item-title">「次の1個」だけを書いて視界に置く</div>
+        <div class="item-why">長いToDoは見るだけでワーキングメモリを消費する。今日動かすのは常に1個だけ。</div>
+        <span class="tag">Genie Board</span><span class="tag gold">点呼で指定</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="c2"><div class="item-body">
+        <div class="item-title">「今日リスト」と「倉庫リスト」を物理的に分ける</div>
+        <div class="item-why">倉庫は見ない。見なくていい仕組みが、未完了の圧から脳を守る。</div>
+        <span class="tag">01 Daily Task</span><span class="tag">Weekly Cockpit = 倉庫</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="c3"><div class="item-body">
+        <div class="item-title">明日の1個は前日の夜に決める</div>
+        <div class="item-why">朝の脳は1日で一番高価な資源。「選ぶ」に浪費せず「実行」だけに充てる。</div>
+        <span class="tag gold">クロージングに組込み済</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="c4"><div class="item-body">
+        <div class="item-title">終わったタスクは線で消して、消した線を残す</div>
+        <div class="item-why">完了の証拠が目に見える報酬になる。ドーパミンの出どころを「計画」から「実績」に付け替える。</div>
+        <span class="tag">Daily Tap</span><span class="tag">もくもくPWA</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="c5"><div class="item-body">
+        <div class="item-title">週1回だけ倉庫リストを棚卸しする</div>
+        <div class="item-why">3週間動いていない項目は「やらなくていい項目」だった。捨てる判断も立派なタスク処理。</div>
+        <span class="tag gold">Weekly Talk / 棚卸しPJ</span>
+      </div></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>着手ハック — 動けない瞬間の非常ボタン</h2></div>
+    <p class="sec-why">動けないのはサボりではなく実行機能が未起動なだけ。報酬系は「着手」しないと点火しない。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="s1"><div class="item-body">
+        <div class="item-title">タスクを「物理的な動作」まで分解する</div>
+        <div class="item-why">「資料作成」ではなく「PCを開いてWordを立ち上げる」。脳の処理負荷を極限まで下げる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="s2"><div class="item-body">
+        <div class="item-title">「5分だけやる」を自分と約束する</div>
+        <div class="item-why">5分やれば作業興奮が勝手にエンジンを回す。終わらなくても「着手した自分」を承認する。</div>
+        <span class="tag">水やり(rep)と同型</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="s3"><div class="item-body">
+        <div class="item-title">思った瞬間から5秒以内に体を動かす</div>
+        <div class="item-why">冷たい水で顔を洗う・その場でジャンプ。強い感覚刺激は脳幹を直撃してDMN（雑念モード）を断ち切る。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="s4"><div class="item-body">
+        <div class="item-title">場所を変えて強制力を生む</div>
+        <div class="item-why">家ではなくカフェ・コワーキングへ。場所の切替が脳のスイッチを物理的に切り替える。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="s5"><div class="item-body">
+        <div class="item-title">ボディダブリング（誰かと一緒に作業する）</div>
+        <div class="item-why">人の存在が「外部前頭前野」として機能して初速が出る。画面越しでも効く。</div>
+        <span class="tag gold">Genieとの並走も同じ構造</span>
+      </div></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>環境・物理 — 意志の出番を消す</h2></div>
+    <p class="sec-why">視界に入るもの全部が脳への入力になる。部屋にある物の数 = 脳の負荷。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="e1"><div class="item-body">
+        <div class="item-title">スマホを物理的に視界から消す（別室・ロッキングコンテナ）</div>
+        <div class="item-why">視界にあるだけで注意リソースを吸われる。「見ない意志」ではなく「見えない配置」。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="e2"><div class="item-body">
+        <div class="item-title">通知は電話以外すべてオフにする</div>
+        <div class="item-why">通知1回ごとに深い集中に入る機会を失う。脳の「注意」を他人に奪わせない。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="e3"><div class="item-body">
+        <div class="item-title">持ち物の定位置を1ミリも動かさない ＋ AirTag</div>
+        <div class="item-why">「探す・迷う」は実行機能を最も消耗させる摩擦。財布・鍵・カバンは定位置とタグで探索時間ゼロに。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="e4"><div class="item-body">
+        <div class="item-title">残り時間が「面積」で見える時計を使う（タイムタイマー）</div>
+        <div class="item-why">ADHDの時間感覚は「今」か「今以外」の2種類。時間は数字でなく視覚で見せる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="e5"><div class="item-body">
+        <div class="item-title">記憶は脳に置かない。全部外部化する</div>
+        <div class="item-why">バークレー（ADHD研究の第一人者）の結論。頭は保管庫ではなく処理装置として使う。</div>
+        <span class="tag gold">Notion / Genieに全振り済</span>
+      </div></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>夜と朝 — リズムが崩れると全部崩れる</h2></div>
+    <p class="sec-why">ADHDのメラトニン分泌は約2時間後ろズレ。夜の意志力ではなく朝の光でリセットする。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="n1"><div class="item-body">
+        <div class="item-title">起きたらまずカーテンを開けて光を浴びる ＋ 水1杯</div>
+        <div class="item-why">体内時計は「朝どれだけ光を浴びたか」でリセットされる。暗い部屋の朝スマホはリセットの放棄。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="n2"><div class="item-body">
+        <div class="item-title">起床後にタンパク質（卵・大豆・プロテイン）</div>
+        <div class="item-why">チロシンはドーパミンの直接の原料。朝の燃料は食べ物で先に入れる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="n3"><div class="item-body">
+        <div class="item-title">夜更かしは「報復的夜更かし」と名前をつけて扱う</div>
+        <div class="item-why">寝ないのではなく「寝ることを先延ばし」している。就寝もタスクとして前倒しの仕組みに乗せる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="n4"><div class="item-body">
+        <div class="item-title">疲れた脳には10分テトリス（タイマー強制終了つき）</div>
+        <div class="item-why">高負荷の視覚処理がDMNの暴走を止めて雑念を消す。休憩は「何もしない」より「単純ゲーム」。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="n5"><div class="item-body">
+        <div class="item-title">帰宅直後の「電池切れ」は仕様として予定に織り込む</div>
+        <div class="item-why">1日「普通」を演じるマスキングはフルマラソン級の重労働。帰宅後30分は何も予定しない。</div>
+      </div></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>お金 — 衝動の熱は時間で冷ます</h2></div>
+    <p class="sec-why">「気前の良さ」も「課金癖」も報酬予測のバグ。意志ではなく振込設定と時間差で守る。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="m1"><div class="item-body">
+        <div class="item-title">給料日に自動で先取り貯金</div>
+        <div class="item-why">意志の出番を振込設定で消す。残った分で暮らす順番に変える。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="m2"><div class="item-body">
+        <div class="item-title">欲しい物は「48時間カート」ルール</div>
+        <div class="item-why">衝動の熱は時間で冷める。2日後も欲しければ買っていい。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="m3"><div class="item-body">
+        <div class="item-title">サブスクは年1回全部解約 → 必要な物だけ再契約</div>
+        <div class="item-why">「解約する物を選ぶ」と脳が渋る。ゼロから「入れる物を選ぶ」に反転させる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="m4"><div class="item-body">
+        <div class="item-title">値札は自分の時給に換算して読む</div>
+        <div class="item-why">「これは自分の3時間分」と翻訳すると報酬予測が現実に近づく。</div>
+      </div></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>人間関係 — 地雷の位置だけ覚えておく</h2></div>
+    <p class="sec-why">初対面の輝きは本物。問題は継続戦。仕組みで「裏切り」を「予告通りの調整」に変える。</p>
+    <div class="card">
+      <label class="item"><input type="checkbox" data-k="r1"><div class="item-body">
+        <div class="item-title">誘いは即決しない。「仮予約」宣言ハック</div>
+        <div class="item-why">「行きたい。ただ波があるから前日に最終確定させて」と最初に伝える。ドタキャンが調整に変わる。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="r2"><div class="item-body">
+        <div class="item-title">会話の「連想ジャック」に気づいたら相手に返す</div>
+        <div class="item-why">「私もさ…」は共感のつもりでも相手には会話の強奪。エピソードを話したら質問で締める。</div>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="r3"><div class="item-body">
+        <div class="item-title">ミスはノーブレイム・レビューで処理する</div>
+        <div class="item-why">航空業界方式。個人を責めずシステムの欠陥として直す。自責はストレスホルモンで実行機能をさらに下げる自傷行為。</div>
+        <span class="tag gold">きょうの声と相性よし</span>
+      </div></label>
+      <label class="item"><input type="checkbox" data-k="r4"><div class="item-body">
+        <div class="item-title">一人反省会が始まったら「脳のタイムトラベル」と呼ぶ</div>
+        <div class="item-why">相手は何とも思っていないことがほとんど。名前をつけるだけでメタ認知が働いて止まりやすい。</div>
+      </div></label>
+    </div>
+  </section>
+
+  <footer>
+    出典: Threads <b>@adhd_logic999（シュタイン | ADHD覚醒コーチング）</b> 2026年4月〜7月の全投稿より抽出・再構成。<br>
+    元アカウントは無料note→LINE登録型のマーケティング色が強いため、数値主張（幸福度5倍等）は除外し、行動設計として機能する項目のみ採用。<br>
+    2026 07 17 / Genie for Chie
+  </footer>
+
+</div>
+
+<script>
+  const boxes = document.querySelectorAll('input[type="checkbox"]');
+  const KEY = 'adhd-hacklist-chie-v1';
+  const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+  boxes.forEach(b => { if (saved[b.dataset.k]) b.checked = true; });
+
+  function update() {
+    const total = boxes.length;
+    let done = 0;
+    const state = {};
+    boxes.forEach(b => { state[b.dataset.k] = b.checked; if (b.checked) done++; });
+    localStorage.setItem(KEY, JSON.stringify(state));
+    document.getElementById('fill').style.width = (done / total * 100) + '%';
+    document.getElementById('count').textContent = done + ' / ' + total;
+  }
+  boxes.forEach(b => b.addEventListener('change', update));
+  document.getElementById('reset').addEventListener('click', () => {
+    boxes.forEach(b => b.checked = false);
+    update();
+  });
+  update();
+</script>
+</body>
+</html>
